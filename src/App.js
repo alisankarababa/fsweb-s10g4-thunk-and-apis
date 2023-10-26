@@ -7,6 +7,8 @@ import { fetchAnother, addFav, getFavsFromLocalStorage } from "./actions"
 
 import { useSelector, useDispatch } from "react-redux";
 
+import { ToastContainer } from "react-toastify";
+
 
 export default function App() {
   const loading = useSelector( store => store.catFacts.loading );
@@ -20,7 +22,21 @@ export default function App() {
     }, [dispatch])
 
   return (
+    
     <div className="wrapper max-w-xl mx-auto px-4">
+        <ToastContainer
+            position="top-right"
+            autoClose={2000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+        />
+
       <nav className="flex text-2xl pb-6 pt-8 gap-2 justify-center">
         <NavLink
           to="/"

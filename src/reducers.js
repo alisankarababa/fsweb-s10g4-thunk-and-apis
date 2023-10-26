@@ -9,6 +9,8 @@ import {
   GET_FAVS_FROM_LS,
 } from "./actions";
 
+import { toast } from 'react-toastify';
+
 const initial = {
   favs: [],
   current: "",
@@ -33,23 +35,27 @@ export function myReducer(state = initial, action) {
             return state;
         }
 
+        toast.info("Favorilere eklendi");
         const stateAfterAdd = {...state, favs: [...state.favs, {id:nanoid(), fact: action.payload}]};
         writeFavsToLocalStorage(stateAfterAdd);
         return stateAfterAdd;
 
     case FAV_REMOVE:
         
+        toast.info("Favorilerden çıkartıldı");
         const stateAfterRemove = {...state, favs: state.favs.filter(fav => fav.id !== action.payload)};
         writeFavsToLocalStorage(stateAfterRemove);
         return stateAfterRemove;
 
     case FETCH_SUCCESS:
+        toast.success("Kedi Fact'iniz hazır🐈");
       return {...state, loading: false, current: action.payload};
 
     case FETCH_LOADING:
       return {...state, loading: true, error: ""};
 
     case FETCH_ERROR:
+        toast.error("Kedi Fact'inizi getiremedik😿");
       return {...state, loading: false, error: action.payload};
 
     case GET_FAVS_FROM_LS:
