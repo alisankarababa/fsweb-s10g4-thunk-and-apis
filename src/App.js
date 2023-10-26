@@ -15,7 +15,7 @@ export default function App() {
   const dispatch = useDispatch();
 
     useEffect(()=>{
-
+        dispatch(getFavsFromLocalStorage());
         dispatch(fetchAnother());
     }, [dispatch])
 
