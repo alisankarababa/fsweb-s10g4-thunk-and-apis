@@ -11,9 +11,9 @@ import {
 
 const initial = {
   favs: [],
-  current: null,
-  error: null,
-  loading: true,
+  current: "",
+  error: "",
+  loading: false,
 };
 
 function writeFavsToLocalStorage(state) {
@@ -27,19 +27,24 @@ function readFavsFromLocalStorage() {
 export function myReducer(state = initial, action) {
   switch (action.type) {
     case FAV_ADD:
-
+        
         for (const iterator of state.favs) {
             if (iterator.fact === action.payload)
-                return state;
+            return state;
         }
 
-        return {...state, favs: [...state.favs, {id:nanoid(), fact: action.payload}]};
+        const stateAfterAdd = {...state, favs: [...state.favs, {id:nanoid(), fact: action.payload}]};
+        writeFavsToLocalStorage(stateAfterAdd);
+        return stateAfterAdd;
 
     case FAV_REMOVE:
-      return {...state, favs: state.favs.filter(fav => fav.id !== action.payload)};
+        
+        const stateAfterRemove = {...state, favs: state.favs.filter(fav => fav.id !== action.payload)};
+        writeFavsToLocalStorage(stateAfterRemove);
+        return stateAfterRemove;
 
     case FETCH_SUCCESS:
-      return {...state, current: action.payload};
+      return {...state, loading: false, current: action.payload};
 
     case FETCH_LOADING:
       return {...state, loading: true, error: ""};
@@ -48,7 +53,12 @@ export function myReducer(state = initial, action) {
       return {...state, loading: false, error: action.payload};
 
     case GET_FAVS_FROM_LS:
-      return state;
+
+        const lsFavs = readFavsFromLocalStorage();
+        if(!lsFavs)
+            return state;
+        
+        return {...state, favs: readFavsFromLocalStorage()};
 
     default:
       return state;
