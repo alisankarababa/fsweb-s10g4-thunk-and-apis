@@ -1,3 +1,5 @@
+import { nanoid } from 'nanoid'
+
 import {
   FAV_ADD,
   FAV_REMOVE,
@@ -25,19 +27,25 @@ function readFavsFromLocalStorage() {
 export function myReducer(state = initial, action) {
   switch (action.type) {
     case FAV_ADD:
-      return state;
+
+        for (const iterator of state.favs) {
+            if (iterator.fact === action.payload)
+                return state;
+        }
+
+        return {...state, favs: [...state.favs, {id:nanoid(), fact: action.payload}]};
 
     case FAV_REMOVE:
-      return state;
+      return {...state, favs: state.favs.filter(fav => fav.id !== action.payload)};
 
     case FETCH_SUCCESS:
-      return state;
+      return {...state, current: action.payload};
 
     case FETCH_LOADING:
-      return state;
+      return {...state, loading: true, error: ""};
 
     case FETCH_ERROR:
-      return state;
+      return {...state, loading: false, error: action.payload};
 
     case GET_FAVS_FROM_LS:
       return state;
